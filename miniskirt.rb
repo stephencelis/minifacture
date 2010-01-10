@@ -4,7 +4,7 @@ module Miniskirt
   @@factories = {}
 
   class << self
-    def define(name, options = {}, &block)
+    def define(name, &block)
       factories[name.to_s] = {} and yield BasicObject.new.instance_eval(%{
         def method_missing(name, value)
           ::Miniskirt.factories["#{name}"][name] = value
