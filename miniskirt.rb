@@ -25,12 +25,14 @@ module Miniskirt
       name = name.to_s and (mod = name.classify.constantize).new do |record|
         attrs.stringify_keys!.reverse_update(factories[name]).each do |k, v|
           record.send "#{k}=", case v when String # Sequence and interpolate.
-            v.sub!(/%\d*d/) { |n| n % @n ||= mod.maximum(:id).to_i + 1 }
-            v % attrs
+            v.sub(/%\d*d/) { |n| n % @n ||= mod.maximum(:id).to_i + 1 } %
+              attrs % @n
           when Proc then v.call(record) else v
           end
         end
       end
+    ensure
+      @n = nil
     end
 
     def create(name, attrs = {})
