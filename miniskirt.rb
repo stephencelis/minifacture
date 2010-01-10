@@ -2,9 +2,8 @@
 module Miniskirt
   mattr_reader :factories
   @@factories = {}
-
   class << self
-    def define(name, &block)
+    def define(name)
       factories[name.to_s] = {} and yield BasicObject.new.instance_eval(%{
         def method_missing(name, value)
           ::Miniskirt.factories["#{name}"][name] = value
