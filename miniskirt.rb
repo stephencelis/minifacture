@@ -1,19 +1,36 @@
 # Factory girl, relaxed.
+#
+#   Factory.define :user do |f|
+#     f.login 'johndoe%d'                          # Sequence.
+#     f.email '%{login}@example.com'               # Interpolate.
+#     f.password f.password_confirmation('foobar') # Chain.
+#   end
+#
+#   Factory.define :post do |f|
+#     f.user { Factory :user }                     # Blocks, if you must.
+#   end
 module Miniskirt
-  mattr_reader :factories
-  @@factories = {}
+  @@factories = {} and mattr_reader :factories
   class << self
     def define(name)
       factories[name.to_s] = {} and yield BasicObject.new.instance_eval(%{
-        def method_missing(name, value)
-          ::Miniskirt.factories["#{name}"][name] = value
+        def method_missing(name, value = nil, &block)
+          ::Miniskirt.factories["#{name}"][name] = block || value
         end
         self
       })
     end
 
     def build(name, attrs = {})
-      name.to_s.classify.constantize.new factories[name.to_s].merge(attrs)
+      name = name.to_s and (mod = name.classify.constantize).new do |record|
+        attrs.stringify_keys!.reverse_update(factories[name]).each do |k, v|
+          record.send "#{k}=", case v when String # Sequence and interpolate.
+            v.sub!(/%\d*d/) { |n| n % @n ||= mod.maximum(:id).to_i + 1 }
+            v % attrs
+          when Proc then v.call(record) else v
+          end
+        end
+      end
     end
 
     def create(name, attrs = {})
