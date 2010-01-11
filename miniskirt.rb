@@ -17,17 +17,14 @@ class Miniskirt < Struct.new(:klass)
     end
 
     def build(name, attrs = {})
-      name = name.to_s and (mod = name.classify.constantize).new do |record|
+      (name, n = name.to_s) and (m = name.classify.constantize).new do |rec|
         attrs.stringify_keys!.reverse_update(@@factories[name]).each do |k, v|
-          record.send "#{k}=", case v when String # Sequence and interpolate.
-            v.sub(/%\d*d/) { |n| n % @n ||= mod.maximum(:id).to_i + 1 } %
-              attrs % @n
-          when Proc then v.call(record) else v
+          rec.send "#{k}=", case v when String # Sequence and interpolate.
+            v.sub(/%\d*d/) {|d| d % n ||= m.maximum(:id).to_i + 1} % attrs % n
+          when Proc then v.call(rec) else v
           end
         end
       end
-    ensure
-      @n = nil
     end
 
     def create(name, attrs = {})
