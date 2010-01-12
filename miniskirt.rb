@@ -9,8 +9,10 @@
 #   Factory.define :post do |f|
 #     f.user { Factory :user }                     # Blocks, if you must.
 #   end
-class Miniskirt < Struct.new(:klass)
+class Miniskirt < Struct.new(:__klass__)
+  undef_method *instance_methods.grep(/^(?!__|object_id)/) # BlankerSlate.
   @@factories = {} and private_class_method :new
+
   class << self
     def define(name)
       @@factories[name = name.to_s] = {} and yield new(name)
@@ -33,7 +35,7 @@ class Miniskirt < Struct.new(:klass)
   end
 
   def method_missing(name, value = nil, &block)
-    @@factories[klass][name] = block || value
+    @@factories[__klass__][name] = block || value
   end
 end
 
