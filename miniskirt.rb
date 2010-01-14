@@ -20,7 +20,7 @@ class Miniskirt < Struct.new(:__klass__)
 
     def build(name, attrs = {})
       (name, n = name.to_s) and (m = name.classify.constantize).new do |rec|
-        attrs.stringify_keys!.reverse_update(@@factories[name]).each do |k, v|
+        attrs.symbolize_keys!.reverse_update(@@factories[name]).each do |k, v|
           rec.send "#{k}=", case v when String # Sequence and interpolate.
             v.sub(/%\d*d/) {|d| d % n ||= m.maximum(:id).to_i + 1} % attrs % n
           when Proc then v.call(rec) else v
