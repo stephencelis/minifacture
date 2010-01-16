@@ -1,6 +1,6 @@
 = Miniskirt
 
-Factory girl, relaxed.
+Factory girl, relaxed: http://www.stephencelis.com/2010/01/11/miniskirt.html
 
   Factory.define :user do |f|
     f.login 'johndoe%d'                          # Sequence.
