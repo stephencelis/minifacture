@@ -1,3 +1,4 @@
+require "active_support"
 # Factory girl, relaxed.
 #
 #   Factory.define :user do |f|
