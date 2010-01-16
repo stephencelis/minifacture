@@ -1,7 +1,7 @@
 require 'miniskirt'
 require 'test/unit'
 
-class MiniSkirtTest < Test::Unit::TestCase
+class MiniskirtTest < Test::Unit::TestCase
   def test_should_define_factories
     factories = Miniskirt.class_variable_get :@@factories
     assert_not_nil factories["user"]
@@ -89,6 +89,14 @@ class Mock
   end
 end
 
+class User < Mock
+  attr_accessor :login, :email, :password, :password_confirmation
+end
+
+class Post < Mock
+  attr_accessor :user
+end
+
 Miniskirt.define :user do |f|
   f.login "johndoe%d"
   f.email "%{login}@example.com"
@@ -97,12 +105,4 @@ end
 
 Miniskirt.define :post do |f|
   f.user { Miniskirt :user }
-end
-
-class User < Mock
-  attr_accessor :login, :email, :password, :password_confirmation
-end
-
-class Post < Mock
-  attr_accessor :user
 end
