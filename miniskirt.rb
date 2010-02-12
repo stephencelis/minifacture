@@ -31,7 +31,7 @@ class Miniskirt < Struct.new(:__klass__)
     end
 
     def create(name, attrs = {})
-      build(name, attrs).tap { |record| record.save }
+      build(name, attrs).tap { |record| record.save! }
     end
   end
 
