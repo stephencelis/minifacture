@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
-  s.date = "2010-01-15"
+  s.date = "2010-02-11"
 
   s.name = "miniskirt"
-  s.version = "0.9"
+  s.version = "0.9.1"
   s.summary = "factory_girl, relaxed"
   s.description = "Test::Unit begot MiniTest; factory_girl begets Miniskirt."
 
