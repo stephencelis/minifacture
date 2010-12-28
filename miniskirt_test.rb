@@ -67,6 +67,12 @@ class MiniskirtTest < Test::Unit::TestCase
     user = Factory.create :user
     assert_equal user.email, "#{user.login}@example.com"
   end
+
+  def test_should_allow_aliases_in_define
+    user = Factory.build :another_name_for_user, :login => (login = 'itsme')
+    assert_instance_of User, user
+    assert_equal login, user.login
+  end
 end
 
 class Mock
@@ -82,6 +88,10 @@ class Mock
   def save
     @@maximum = @@maximum.to_i + 1 unless @saved
     @saved = true
+  end
+
+  def save!
+    save
   end
 
   def new_record?
@@ -101,6 +111,9 @@ Miniskirt.define :user do |f|
   f.login "johndoe%d"
   f.email "%{login}@example.com"
   f.password f.password_confirmation("foobarbaz")
+end
+
+Miniskirt.define :user, :as => :another_name_for_user do |f|
 end
 
 Miniskirt.define :post do |f|

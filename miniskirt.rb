@@ -15,17 +15,18 @@ class Miniskirt < Struct.new(:__klass__)
   @@factories = {} and private_class_method :new
 
   class << self
-    def define(name)
-      @@factories[name = name.to_s] = {} and yield new(name)
+    def define(name, attrs = {})
+      name, klass = attrs.delete(:as), name if attrs.has_key?(:as)
+      @@factories[name = name.to_s] = {:class => klass} and yield new(name)
     end
 
     def build(name, attrs = {})
-      (name, n = name.to_s) and (m = name.classify.constantize).new do |rec|
+      (name, n = (@@factories[name.to_s][:class] || name).to_s) and (m = name.classify.constantize).new do |rec|
         attrs.symbolize_keys!.reverse_update(@@factories[name]).each do |k, v|
           rec.send "#{k}=", case v when String # Sequence and interpolate.
             v.sub(/%\d*d/) {|d| d % n ||= m.maximum(:id).to_i + 1} % attrs % n
           when Proc then v.call(rec) else v
-          end
+          end unless k == :class
         end
       end
     end
