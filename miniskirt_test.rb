@@ -69,9 +69,9 @@ class MiniskirtTest < Test::Unit::TestCase
   end
 
   def test_should_allow_aliases_in_define
-    user = Factory.build :another_name_for_user, :login => (login = 'itsme')
+    user = Factory.build :another_name_for_user
     assert_instance_of User, user
-    assert_equal login, user.login
+    assert_equal 'test', user.login
   end
 end
 
@@ -114,6 +114,7 @@ Miniskirt.define :user do |f|
 end
 
 Miniskirt.define :user, :as => :another_name_for_user do |f|
+  f.login 'test'
 end
 
 Miniskirt.define :post do |f|
