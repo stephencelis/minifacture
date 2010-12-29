@@ -2,13 +2,17 @@ require "active_support"
 # Factory girl, relaxed.
 #
 #   Factory.define :user do |f|
-#     f.login 'johndoe%d'                          # Sequence.
-#     f.email '%{login}@example.com'               # Interpolate.
-#     f.password f.password_confirmation('foobar') # Chain.
+#     f.login 'johndoe%d'                               # Sequence.
+#     f.email '%{login}@example.com'                    # Interpolate.
+#     f.password f.password_confirmation('foobar')      # Chain.
 #   end
-#
+# 
 #   Factory.define :post do |f|
-#     f.user { Factory :user }                     # Blocks, if you must.
+#     f.user { Factory :user }                          # Blocks, if you must.
+#   end
+# 
+#   Factory.define :post, :as => :important_post do |f| # Aliases using :as
+#     f.status 'muy importante'
 #   end
 class Miniskirt < Struct.new(:__klass__)
   undef_method *instance_methods.grep(/^(?!__|object_id)/) # BlankerSlate.
