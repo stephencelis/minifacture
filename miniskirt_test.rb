@@ -1,4 +1,4 @@
-require 'miniskirt'
+require './miniskirt'
 require 'test/unit'
 
 class MiniskirtTest < Test::Unit::TestCase
