@@ -79,7 +79,7 @@ class Mock
     yield self
   end
 
-  def save
+  def save!
     @@maximum = @@maximum.to_i + 1 unless @saved
     @saved = true
   end
