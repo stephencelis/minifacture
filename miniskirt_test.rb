@@ -3,9 +3,9 @@ require 'test/unit'
 
 class MiniskirtTest < Test::Unit::TestCase
   def test_should_define_factories
-    factories = Miniskirt.class_variable_get :@@factories
+    factories = Miniskirt.class_variable_get :@@attrs
     assert_not_nil factories["user"]
-    assert_not_nil factories["post"]
+    assert_not_nil factories["blog_entry"]
   end
 
   def test_should_build_object
@@ -60,12 +60,23 @@ class MiniskirtTest < Test::Unit::TestCase
   def test_should_sequence
     user1 = Factory.create :user
     user2 = Factory.create :user
-    assert_equal user1.login.succ, user2.login
+    assert_equal user1.login.sub(/\d+$/) { |n| n.to_i.succ.to_s }, user2.login
   end
 
   def test_should_interpolate
     user = Factory.create :user
     assert_equal user.email, "#{user.login}@example.com"
+  end
+
+  def test_should_inherit
+    admin = Factory.create :admin
+    assert_equal 'admin', admin.login
+    assert_equal 'admin@example.com', admin.email
+  end
+
+  def test_should_alias
+    blog_entry = Factory.create :blog_entry
+    assert_equal 'admin', blog_entry.user.login
   end
 end
 
@@ -97,12 +108,16 @@ class Post < Mock
   attr_accessor :user
 end
 
+Miniskirt.define :admin, :parent => :user do |f|
+  f.login "admin"
+end
+
 Miniskirt.define :user do |f|
   f.login "johndoe%d"
   f.email "%{login}@example.com"
   f.password f.password_confirmation("foobarbaz")
 end
 
-Miniskirt.define :post do |f|
-  f.user { Miniskirt :user }
+Miniskirt.define :blog_entry, :class => Post do |f|
+  f.user { Miniskirt :admin }
 end
