@@ -78,6 +78,12 @@ class MiniskirtTest < Test::Unit::TestCase
     blog_entry = Factory.create :blog_entry
     assert_equal 'admin', blog_entry.user.login
   end
+
+  def test_should_accept_class_as_symbol
+    assert_nothing_raised do
+      guest = Factory.create :guest
+    end
+  end
 end
 
 class Mock
@@ -120,4 +126,8 @@ end
 
 Miniskirt.define :blog_entry, :class => Post do |f|
   f.user { Miniskirt :admin }
+end
+
+Miniskirt.define :guest, :class => :user do |f|
+  f.login "guest"
 end
