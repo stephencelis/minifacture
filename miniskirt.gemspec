@@ -10,11 +10,12 @@ Gem::Specification.new do |s|
   s.files = "miniskirt.rb"
   s.test_file = "miniskirt_test.rb"
 
-  s.required_ruby_version = ">= 1.8.7"
-  s.add_dependency "activesupport",
-    RUBY_VERSION >= "1.9" ? ">= 2.2" : ">= 3.0.pre"
-
   s.author = "Stephen Celis"
   s.email = "stephen@stephencelis.com"
   s.homepage = "http://github.com/stephencelis/miniskirt"
+
+  s.required_ruby_version = ">= 1.8.7"
+  s.add_dependency "activesupport",
+    RUBY_VERSION >= "1.9" ? "~> 2.2" : "~> 3.0.0"
+  s.add_development_dependency "rake", "~> 0.9.2"
 end

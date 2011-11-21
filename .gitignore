@@ -1,3 +1,4 @@
-bin
-miniskirt-*.gem
+.DS_Store
+
+*.gem
 vendor
