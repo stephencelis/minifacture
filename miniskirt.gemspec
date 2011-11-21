@@ -2,7 +2,7 @@ Gem::Specification.new do |s|
   s.date = "2011-11-21"
 
   s.name = "miniskirt"
-  s.version = "1.1.0"
+  s.version = "1.1.1"
   s.summary = "factory_girl, relaxed"
   s.description = "Test::Unit begot MiniTest; factory_girl begets Miniskirt."
 

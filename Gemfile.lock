@@ -1,13 +1,15 @@
 PATH
   remote: .
   specs:
-    miniskirt (1.1.0)
-      activesupport (~> 2.2)
+    miniskirt (1.1.1)
+      activesupport (>= 2.2)
 
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (2.3.14)
+    activesupport (3.1.2)
+      multi_json (~> 1.0)
+    multi_json (1.0.3)
     rake (0.9.2)
 
 PLATFORMS
