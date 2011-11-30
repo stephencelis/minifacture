@@ -87,9 +87,9 @@ class MiniskirtTest < Test::Unit::TestCase
 end
 
 class Mock
-  @@maximum = nil
-  def self.maximum(column)
-    @@maximum
+  @@count = nil
+  def self.count
+    @@count
   end
 
   def initialize
@@ -97,7 +97,7 @@ class Mock
   end
 
   def save!
-    @@maximum = @@maximum.to_i + 1 unless @saved
+    @@count = @@count.to_i + 1 unless @saved
     @saved = true
   end
 
