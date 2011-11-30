@@ -26,7 +26,7 @@ class Miniskirt < Struct.new(:__klass__)
       (m = klass.is_a?(Class) ? klass : klass.to_s.classify.constantize).new do |r|
         attrs.symbolize_keys!.reverse_update(h).each do |k, v|
           r.send "#{k}=", case v when String # Sequence and interpolate.
-            v.sub(/%\d*d/) {|d| d % n ||= m.count + 1} % attrs % n
+            v.sub(/%\d*d/) {|d| d % n ||= self.count! } % attrs % n
           when Proc then v.call(r) else v
           end
         end
@@ -35,6 +35,11 @@ class Miniskirt < Struct.new(:__klass__)
 
     def create name, attrs = {}
       build(name, attrs).tap { |record| record.save! }
+    end
+    
+    def count!
+      @@count ||= 0
+      @@count += 1
     end
   end
 

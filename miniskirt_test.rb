@@ -87,17 +87,11 @@ class MiniskirtTest < Test::Unit::TestCase
 end
 
 class Mock
-  @@count = nil
-  def self.count
-    @@count
-  end
-
   def initialize
     yield self
   end
 
   def save!
-    @@count = @@count.to_i + 1 unless @saved
     @saved = true
   end
 
