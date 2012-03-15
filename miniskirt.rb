@@ -34,11 +34,7 @@ class Miniskirt < Struct.new(:__name__, :__klass__, :__parent__, :__attrs__)
       klass = options.delete(:class) { name }
       parent = options.delete(:parent)
 
-      factory = new(name, klass, parent, {})
-
-      yield factory
-
-      @factories[name] = factory
+      yield(@factories[name] = new(name, klass, parent, {}))
     end
 
     # Initialize and setup class from factory.
@@ -46,9 +42,7 @@ class Miniskirt < Struct.new(:__name__, :__klass__, :__parent__, :__attrs__)
     # You can override default factory settings, by passing them
     # as second argument.
     def build(name, attrs = {})
-      factory = @factories[name.to_s]
-
-      klass, parent, attributes = [:__klass__, :__parent__, :__attrs__].inject([]) {|acc, m| acc << factory.__send__(m)}
+      klass, parent, attributes = [:__klass__, :__parent__, :__attrs__].inject([]) {|acc, m| acc << @factories[name.to_s].__send__(m)}
 
       # Create copy of attributes
       attributes = attributes.dup
@@ -60,12 +54,11 @@ class Miniskirt < Struct.new(:__name__, :__klass__, :__parent__, :__attrs__)
         klass = @factories[parent].__klass__
       end
 
-      attributes.merge!(attrs)
-      attributes.symbolize_keys!
+      attributes.merge!(attrs).symbolize_keys!
 
       # Interpolate attributes
       attributes.each do |name, value|
-        attributes[name] = value.sub(/%\d*d/) {|d| d % sequence(klass) } % attributes if value.kind_of? String
+        attributes[name] = value.sub(/%\d*d/) {|d| d % (@sequence[klass] += 1) } % attributes if value.kind_of? String
       end
 
       # Convert klass to real Class
@@ -81,11 +74,6 @@ class Miniskirt < Struct.new(:__name__, :__klass__, :__parent__, :__attrs__)
     # Create and save new factory product
     def create(name, attrs = {})
       build(name, attrs).tap { |record| record.save! }
-    end
-
-    # Return next sequence for given class
-    def sequence(klass)
-      @sequence[klass] += 1
     end
   end
 
