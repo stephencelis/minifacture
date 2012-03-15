@@ -92,7 +92,7 @@ class Miniskirt < Struct.new(:__name__, :__klass__, :__parent__, :__attrs__)
   # Capture method calls, and save it to factory attributes
   def method_missing(name, value = nil, &block)
     __attrs__.merge!(name => block || value)
-    value # Return value to be able to use chaingin like: f.password f.password_confirmation("something")
+    value # Return value to be able to use chaining like: f.password f.password_confirmation("something")
   end
 end
 
