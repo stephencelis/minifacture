@@ -18,6 +18,7 @@ class Miniskirt < Struct.new(:__name__, :__klass__, :__parent__, :__attrs__)
   # Do not use class variable, as it will be shared among all childrens and
   # can be unintentionally changed.
   @factories = {}
+  @sequence = Hash.new(0)
 
   class << self
     # Define new factory with given name. New instance of Miniskirt
@@ -62,23 +63,17 @@ class Miniskirt < Struct.new(:__name__, :__klass__, :__parent__, :__attrs__)
       attributes.merge!(attrs)
       attributes.symbolize_keys!
 
+      # Interpolate attributes
+      attributes.each do |name, value|
+        attributes[name] = value.sub(/%\d*d/) {|d| d % sequence(klass) } % attributes if value.kind_of? String
+      end
+
       # Convert klass to real Class
       klass = klass.is_a?(Class) ? klass : klass.to_s.classify.constantize
 
       klass.new do |record|
         attributes.each do |name, value|
-          value = case value
-          # If value is string, we will sequence an interpolate it
-          when String
-            value.sub(/%\d*d/) {|d| d % sequence(klass) % attributes} % attributes % sequence(klass)
-          # When Proc we will call this proc with record as argument
-          when Proc
-            value.call(record)
-          else
-            value
-          end
-
-          record.send(:"#{name}=", value.dup)
+          record.send(:"#{name}=", (value.kind_of?(Proc) ? value.call(record) : value).dup)
         end
       end
     end
@@ -90,14 +85,14 @@ class Miniskirt < Struct.new(:__name__, :__klass__, :__parent__, :__attrs__)
 
     # Return next sequence for given class
     def sequence(klass)
-      (klass.respond_to?(:maximum) ? klass.maximum(:id) : klass.max(:id)).to_i
+      @sequence[klass] += 1
     end
   end
 
   # Capture method calls, and save it to factory attributes
   def method_missing(name, value = nil, &block)
     __attrs__.merge!(name => block || value)
-    value # Return value to be able to use f.password f.password_confirmation("something")
+    value # Return value to be able to use chaingin like: f.password f.password_confirmation("something")
   end
 end
 

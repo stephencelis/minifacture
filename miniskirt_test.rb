@@ -101,20 +101,18 @@ class MiniskirtTest < Test::Unit::TestCase
 
     assert_equal "gray", bob.settings["eyes"]
   end
+
+  def test_should_sequence_without_database
+    assert_not_equal Factory.build(:user).login, Factory.build(:user).login
+  end
 end
 
 class Mock
-  @@maximum = nil
-  def self.maximum(column)
-    @@maximum
-  end
-
   def initialize
     yield self
   end
 
   def save!
-    @@maximum = @@maximum.to_i + 1 unless @saved
     @saved = true
   end
 
