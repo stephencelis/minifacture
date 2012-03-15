@@ -3,9 +3,10 @@ require 'test/unit'
 
 class MiniskirtTest < Test::Unit::TestCase
   def test_should_define_factories
-    factories = Miniskirt.class_variable_get :@@attrs
-    assert_not_nil factories["user"]
-    assert_not_nil factories["blog_entry"]
+    factories = Miniskirt.instance_variable_get :@factories
+
+    assert factories["user"]
+    assert factories["blog_entry"]
   end
 
   def test_should_build_object
@@ -65,7 +66,7 @@ class MiniskirtTest < Test::Unit::TestCase
 
   def test_should_interpolate
     user = Factory.create :user
-    assert_equal user.email, "#{user.login}@example.com"
+    assert_equal "#{user.login}@example.com", user.email
   end
 
   def test_should_inherit
@@ -83,6 +84,22 @@ class MiniskirtTest < Test::Unit::TestCase
     assert_nothing_raised do
       guest = Factory.create :guest
     end
+  end
+
+  def test_objects_should_not_corrupt_attribute_templates
+    factories = Miniskirt.instance_variable_get(:@factories)
+    assert_not_equal DefaultSettings.object_id, factories["guest"].__attrs__["settings"].object_id
+  end
+
+  def test_factories_should_not_corrupt_attribute_templates
+    alice = Factory.build :guest
+    bob = Factory.build :guest
+
+    assert_not_equal DefaultSettings.object_id, alice.object_id, "Object from factory should not reference to template object"
+
+    alice.settings["eyes"] = "brown"
+
+    assert_equal "gray", bob.settings["eyes"]
   end
 end
 
@@ -107,7 +124,7 @@ class Mock
 end
 
 class User < Mock
-  attr_accessor :login, :email, :password, :password_confirmation
+  attr_accessor :login, :email, :password, :password_confirmation, :settings
 end
 
 class Post < Mock
@@ -128,6 +145,12 @@ Miniskirt.define :blog_entry, :class => Post do |f|
   f.user { Miniskirt :admin }
 end
 
+DefaultSettings = {
+  "hair" => "green",
+  "eyes" => "gray"
+}
+
 Miniskirt.define :guest, :class => :user do |f|
   f.login "guest"
+  f.settings DefaultSettings
 end

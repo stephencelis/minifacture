@@ -11,41 +11,98 @@ require 'active_support/core_ext/hash'
 #   Factory.define :post do |f|
 #     f.user { Factory :user }                     # Blocks, if you must.
 #   end
-class Miniskirt < Struct.new(:__klass__)
+class Miniskirt < Struct.new(:__name__, :__klass__, :__parent__, :__attrs__)
   undef_method *instance_methods.grep(/^(?!__|object_id)/)
-  @@attrs = {} and private_class_method :new
+  private_class_method :new # "Hide" constructor from world
+
+  # Do not use class variable, as it will be shared among all childrens and
+  # can be unintentionally changed.
+  @factories = {}
 
   class << self
-    def define name, options = {}
-      @@attrs[name = name.to_s] = [{}, options] and yield new(name)
+    # Define new factory with given name. New instance of Miniskirt
+    # will be passed as argument to given block.
+    #
+    # Options are:
+    # * class - name of class to be instantiated. By default is same as name
+    # * parent - name of parent factory
+    def define(name, options = {})
+      name = name.to_s
+
+      # Get class name from options or use name
+      klass = options.delete(:class) { name }
+      parent = options.delete(:parent)
+
+      factory = new(name, klass, parent, {})
+
+      yield factory
+
+      @factories[name] = factory
     end
 
-    def build name, attrs = {}
-      (h, opts, n = @@attrs[name = name.to_s]) and klass = opts[:class] || name
-      p = opts[:parent] and (h, klass = @@attrs[p = p.to_s][0].merge(h), p)
-      (m = klass.is_a?(Class) ? klass : klass.to_s.classify.constantize).new do |r|
-        attrs.symbolize_keys!.reverse_update(h).each do |k, v|
-          r.send "#{k}=", case v when String # Sequence and interpolate.
-            v.sub(/%\d*d/) {|d| d % n ||= (
-              m.respond_to?(:maximum) ? m.maximum(:id) : m.max(:id)
-            ).to_i + 1} % attrs % n
-          when Proc then v.call(r) else v
+    # Initialize and setup class from factory.
+    #
+    # You can override default factory settings, by passing them
+    # as second argument.
+    def build(name, attrs = {})
+      factory = @factories[name.to_s]
+
+      klass, parent, attributes = [:__klass__, :__parent__, :__attrs__].inject([]) {|acc, m| acc << factory.__send__(m)}
+
+      # Create copy of attributes
+      attributes = attributes.dup
+
+      # If parent set, then merge parent template with current template
+      if parent
+        parent = parent.to_s
+        attributes = @factories[parent].__attrs__.dup.merge(attributes)
+        klass = @factories[parent].__klass__
+      end
+
+      attributes.merge!(attrs)
+      attributes.symbolize_keys!
+
+      # Convert klass to real Class
+      klass = klass.is_a?(Class) ? klass : klass.to_s.classify.constantize
+
+      klass.new do |record|
+        attributes.each do |name, value|
+          value = case value
+          # If value is string, we will sequence an interpolate it
+          when String
+            value.sub(/%\d*d/) {|d| d % sequence(klass) % attributes} % attributes % sequence(klass)
+          # When Proc we will call this proc with record as argument
+          when Proc
+            value.call(record)
+          else
+            value
           end
+
+          record.send(:"#{name}=", value.dup)
         end
       end
     end
 
-    def create name, attrs = {}
+    # Create and save new factory product
+    def create(name, attrs = {})
       build(name, attrs).tap { |record| record.save! }
+    end
+
+    # Return next sequence for given class
+    def sequence(klass)
+      (klass.respond_to?(:maximum) ? klass.maximum(:id) : klass.max(:id)).to_i
     end
   end
 
-  def method_missing name, value = nil, &block
-    @@attrs[__klass__][0][name] = block || value
+  # Capture method calls, and save it to factory attributes
+  def method_missing(name, value = nil, &block)
+    __attrs__.merge!(name => block || value)
+    value # Return value to be able to use f.password f.password_confirmation("something")
   end
 end
 
-def Miniskirt name, attrs = {}
+# Shortcut to Miniskirt#create
+def Miniskirt(name, attrs = {})
   Miniskirt.create(name, attrs)
 end
 
