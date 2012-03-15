@@ -56,7 +56,7 @@ class Miniskirt < Struct.new(:__name__, :__klass__, :__parent__, :__attrs__)
       # If parent set, then merge parent template with current template
       if parent
         parent = parent.to_s
-        attributes = @factories[parent].__attrs__.dup.merge(attributes)
+        attributes = @factories[parent].__attrs__.merge(attributes)
         klass = @factories[parent].__klass__
       end
 
