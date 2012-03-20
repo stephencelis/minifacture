@@ -1,5 +1,6 @@
 require 'active_support/inflector'
 require 'active_support/core_ext/hash'
+
 # Factory girl, relaxed.
 #
 #   Factory.define :user do |f|
