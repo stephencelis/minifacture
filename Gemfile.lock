@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    miniskirt (1.1.1)
+    midiskirt (1.1.1)
       activesupport (>= 2.2)
 
 GEM
@@ -16,5 +16,5 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  miniskirt!
+  midiskirt!
   rake (~> 0.9.2)

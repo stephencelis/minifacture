@@ -11,7 +11,7 @@ require 'active_support/core_ext/hash'
 #   Factory.define :post do |f|
 #     f.user { Factory :user }                     # Blocks, if you must.
 #   end
-class Miniskirt < Struct.new(:__name__, :__klass__, :__parent__, :__attrs__)
+class Midiskirt < Struct.new(:__name__, :__klass__, :__parent__, :__attrs__)
   undef_method *instance_methods.grep(/^(?!__|object_id)/)
   private_class_method :new # "Hide" constructor from world
 
@@ -21,7 +21,7 @@ class Miniskirt < Struct.new(:__name__, :__klass__, :__parent__, :__attrs__)
   @sequence = Hash.new(0)
 
   class << self
-    # Define new factory with given name. New instance of Miniskirt
+    # Define new factory with given name. New instance of Midiskirt
     # will be passed as argument to given block.
     #
     # Options are:
@@ -84,12 +84,12 @@ class Miniskirt < Struct.new(:__name__, :__klass__, :__parent__, :__attrs__)
   end
 end
 
-# Shortcut to Miniskirt#create
-def Miniskirt(name, attrs = {})
-  Miniskirt.create(name, attrs)
+# Shortcut to Midiskirt#create
+def Midiskirt(name, attrs = {})
+  Midiskirt.create(name, attrs)
 end
 
 unless Object.const_defined? :Factory
-  Factory = Miniskirt
-  alias Factory Miniskirt
+  Factory = Midiskirt
+  alias Factory Midiskirt
 end

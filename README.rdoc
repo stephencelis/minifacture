@@ -1,4 +1,8 @@
-= Miniskirt
+= Midiskirt
+
+Pretty same as Miniskirt[https://github.com/stephencelis/miniskirt], but didn't hurt your eyes.
+
+== Usage
 
 Factory girl, relaxed: http://www.stephencelis.com/2010/01/11/miniskirt.html
 
@@ -26,14 +30,14 @@ In a Rails ~> 3 project:
   % gem bundle # If necessary, `[sudo] gem install bundler`
 
   # test/test_helper.rb
-  require "miniskirt"
+  require "midiskirt"
   require "factories" # If you define your factories in test/factories.rb
 
 
 In a Rails ~> 2.2 project:
 
   # config/environments/test.rb
-  config.gem "miniskirt"
+  config.gem "midiskirt"
 
   % [sudo] rake gems:install
 
@@ -46,6 +50,7 @@ In a Rails ~> 2.2 project:
 (The MIT License)
 
 (c) 2011 Stephen Celis, stephen@stephencelis.com.
+(c) 2012 Alexey Bondar, y8@ya.ru
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

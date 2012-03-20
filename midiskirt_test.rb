@@ -1,9 +1,9 @@
-require './miniskirt'
+require './midiskirt'
 require 'test/unit'
 
-class MiniskirtTest < Test::Unit::TestCase
+class MidiskirtTest < Test::Unit::TestCase
   def test_should_define_factories
-    factories = Miniskirt.instance_variable_get :@factories
+    factories = Midiskirt.instance_variable_get :@factories
 
     assert factories["user"]
     assert factories["blog_entry"]
@@ -87,7 +87,7 @@ class MiniskirtTest < Test::Unit::TestCase
   end
 
   def test_objects_should_not_corrupt_attribute_templates
-    factories = Miniskirt.instance_variable_get(:@factories)
+    factories = Midiskirt.instance_variable_get(:@factories)
     assert_not_equal DefaultSettings.object_id, factories["guest"].__attrs__["settings"].object_id
   end
 
@@ -129,18 +129,18 @@ class Post < Mock
   attr_accessor :user
 end
 
-Miniskirt.define :admin, :parent => :user do |f|
+Midiskirt.define :admin, :parent => :user do |f|
   f.login "admin"
 end
 
-Miniskirt.define :user do |f|
+Midiskirt.define :user do |f|
   f.login "johndoe%d"
   f.email "%{login}@example.com"
   f.password f.password_confirmation("foobarbaz")
 end
 
-Miniskirt.define :blog_entry, :class => Post do |f|
-  f.user { Miniskirt :admin }
+Midiskirt.define :blog_entry, :class => Post do |f|
+  f.user { Midiskirt :admin }
 end
 
 DefaultSettings = {
@@ -148,7 +148,7 @@ DefaultSettings = {
   "eyes" => "gray"
 }
 
-Miniskirt.define :guest, :class => :user do |f|
+Midiskirt.define :guest, :class => :user do |f|
   f.login "guest"
   f.settings DefaultSettings
 end
