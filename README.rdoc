@@ -41,6 +41,21 @@ In a Rails ~> 2.2 project:
   require "factories" # If you define your factories in test/factories.rb
 
 
+== Use
+
+To get a User instance that's not saved:
+
+  u = Factory.build(:user)
+
+To get a User instance that's saved:
+
+  u = Factory.create(:user)
+
+Shorthand for create:
+
+  u = Factory(:user)
+
+
 == License
 
 (The MIT License)
