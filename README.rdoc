@@ -56,6 +56,25 @@ Shorthand for create:
   u = Factory(:user)
 
 
+== Blocks
+
+To use a block with the object as it's being built:
+
+    Factory.define :item do |item|
+      name {|x| x.name || "Alice" }
+    end
+
+Usage:
+
+    u = Factory(:user)
+    u.name #=> "Alice"
+
+    u = Factory(:user, :name => "Bob")
+    u.name #=> "Bob"
+
+Blocks are called after the object is initialized, so you can access any of the object's methods.
+
+
 == License
 
 (The MIT License)
