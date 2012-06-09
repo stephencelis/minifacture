@@ -60,8 +60,35 @@ Shorthand for create:
 
 To use a block with the object as it's being built:
 
-    Factory.define :item do |item|
-      name {|x| x.name || "Alice" }
+    Factory.define :user do |f|
+      f.name {|x| ... x is the object ... }
+    end
+
+    u = Factory(:user)
+
+This initializes the object, then processes the factory attribute "name" which calls the block.
+
+You can use this to access any of the object's methods.
+
+
+== Methods
+
+To call a method on an object as it's being built:
+
+    Factory.define :user do |f|
+    end
+
+    Factory(:user, :name => "Bob")
+
+This initializes the object, then calls the "name=" method on the object.
+
+
+== Blocks + Methods 
+
+To use a block and method together: 
+
+    Factory.define :user do |f|
+      f.name {|x| x.name || "Alice" }
     end
 
 Usage:
@@ -72,7 +99,7 @@ Usage:
     u = Factory(:user, :name => "Bob")
     u.name #=> "Bob"
 
-Blocks are called after the object is initialized, so you can access any of the object's methods.
+This initializes the object, then calls the "name=" method on the object, then processes the factory attribute "name" which calls the block.
 
 
 == License
