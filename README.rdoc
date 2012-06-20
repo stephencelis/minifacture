@@ -43,17 +43,97 @@ In a Rails ~> 2.2 project:
 
 == Use
 
+
 To get a User instance that's not saved:
 
   u = Factory.build(:user)
+
 
 To get a User instance that's saved:
 
   u = Factory.create(:user)
 
+
 Shorthand for create:
 
   u = Factory(:user)
+
+
+== Methods
+
+
+Methods can customize a factory's object as it is being built.
+
+
+Take a simple class:
+
+    class User
+      attr_accessor :name
+      attr_accessor :email
+    end
+
+
+And a simple factory:
+
+    Factory.define :user do
+    end
+
+
+Use:
+
+    u = Factory(:user, :name => "Alice", :email => "alice@example.com")
+    u.name #=> "Alice"
+    u.email #=> "alice@example.com"
+
+
+This initializes the object, then calls the object's "name=" method and "email=" method.
+
+
+== Blocks
+
+
+Blocks can use any Ruby code:
+
+    Factory.define :user do |f|
+      f.name { ["Alice", "Bob", "Carol"].choice }
+      f.email { ["alice", "bob", "carol"].choice + "@example.com" }
+    end
+
+
+Use:
+
+    u = Factory(:user)
+    u.name #=> "Bob"
+    u.email #=> "carol@example.com"
+
+
+Blocks can use a parameter to access the object as it is being built:
+
+    Factory.define :user do |f|
+      f.name { ["Alice", "Bob", "Carol"].choice }
+      f.email {|x| x.name.downcase + "@example.com" }
+    end
+
+
+Use:
+
+    u = Factory(:user)
+    u.name #=> "Bob"
+    u.email #=> "bob@example.com"
+
+
+
+== Methods + Blocks
+
+
+When you use methods and blocks together, the methods are called, then the blocks:
+
+    u = Factory(:user, :name => "Eve")
+    u.name #=> "Eve"
+    u.email #=> "eve@example.com"
+
+
+This initializes the object, then calls the object's "name=" method, then processes the factory attribute "email" which calls the block.
 
 
 == License
