@@ -23,7 +23,7 @@ class Miniskirt < Struct.new(:__klass__)
     def build name, attrs = {}
       (h, opts, n = @@attrs[name = name.to_s]) and klass = opts[:class] || name
       p = opts[:parent] and (h, klass = @@attrs[p = p.to_s][0].merge(h), p)
-      (m = klass.is_a?(Class) ? klass : klass.to_s.classify.constantize).new do |r|
+      (m = klass.is_a?(Class) ? klass : klass.to_s.classify.constantize).new.tap do |r|
         attrs.symbolize_keys!.reverse_update(h).each do |k, v|
           r.send "#{k}=", case v when String # Sequence and interpolate.
             v.sub(/%\d*d/) {|d| d % n ||= (
