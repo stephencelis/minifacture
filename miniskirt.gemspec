@@ -10,6 +10,8 @@ Gem::Specification.new do |s|
   s.files = "miniskirt.rb"
   s.test_file = "miniskirt_test.rb"
 
+  s.has_rdoc = false
+
   s.author = "Stephen Celis"
   s.email = "stephen@stephencelis.com"
   s.homepage = "http://github.com/stephencelis/miniskirt"
