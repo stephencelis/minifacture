@@ -1,8 +1,6 @@
 Gem::Specification.new do |s|
-  s.date = "2012-08-31"
-
   s.name = "miniskirt"
-  s.version = "1.2"
+  s.version = "1.2.1"
   s.summary = "factory_girl, relaxed"
   s.description = "Test::Unit begot MiniTest; factory_girl begets Miniskirt."
 
@@ -17,8 +15,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/stephencelis/miniskirt"
 
   s.required_ruby_version = ">= 1.8.7"
-  s.add_dependency "activesupport",
-    RUBY_VERSION >= "1.9" ? ">= 2.2" : ">= 3.0"
+  s.add_dependency "activesupport"
   s.add_development_dependency "rake", "~> 0.9.2.2"
   s.add_development_dependency "i18n", "~> 0.6.0"
 end
