@@ -1,8 +1,9 @@
 # Miniskirt
 
-Factory girl, relaxed:
+[factory_girl][1] for [minitest][2].
 
-http://www.stephencelis.com/2010/01/11/miniskirt.html
+[1]: https://github.com/thoughtbot/factory_girl
+[2]: https://github.com/seattlerb/minitest
 
 ``` ruby
 Factory.define :user do |f|
