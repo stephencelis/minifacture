@@ -1,9 +1,9 @@
-require './miniskirt'
+require './minifacture'
 require 'test/unit'
 
-class MiniskirtTest < Test::Unit::TestCase
+class MinifactureTest < Test::Unit::TestCase
   def test_should_define_factories
-    factories = Miniskirt.class_variable_get :@@attrs
+    factories = Minifacture.class_variable_get :@@attrs
     assert_not_nil factories["user"]
     assert_not_nil factories["blog_entry"]
   end
@@ -110,20 +110,20 @@ class Post < Mock
   attr_accessor :user
 end
 
-Miniskirt.define :admin, :parent => :user do |f|
+Minifacture.define :admin, :parent => :user do |f|
   f.login "admin"
 end
 
-Miniskirt.define :user do |f|
+Minifacture.define :user do |f|
   f.login "johndoe%d"
   f.email "%{login}@example.com"
   f.password f.password_confirmation("foobarbaz")
 end
 
-Miniskirt.define :blog_entry, :class => Post do |f|
-  f.user { Miniskirt :admin }
+Minifacture.define :blog_entry, :class => Post do |f|
+  f.user { Minifacture :admin }
 end
 
-Miniskirt.define :guest, :class => :user do |f|
+Minifacture.define :guest, :class => :user do |f|
   f.login "guest"
 end

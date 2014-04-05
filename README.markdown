@@ -1,4 +1,4 @@
-# Miniskirt
+# Minifacture
 
 [factory_girl][1] for [minitest][2].
 
@@ -20,16 +20,10 @@ end
 
 ## Install
 
-``` sh
-$ gem install miniskirt
-```
-
-In a Rails ~> 3 project:
-
 ``` ruby
 # Gemfile
 group :test do
-  gem 'miniskirt'
+  gem 'minifacture'
 end
 ```
 

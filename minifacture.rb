@@ -11,7 +11,7 @@ require 'active_support/core_ext/hash'
 #   Factory.define :post do |f|
 #     f.user { Factory :user }                     # Blocks, if you must.
 #   end
-class Miniskirt < Struct.new(:__klass__)
+class Minifacture < Struct.new(:__klass__)
   undef_method *instance_methods.grep(/^(?!__|object_id)/)
   @@attrs = {} and private_class_method :new
 
@@ -45,11 +45,11 @@ class Miniskirt < Struct.new(:__klass__)
   end
 end
 
-def Miniskirt name, attrs = {}
-  Miniskirt.create(name, attrs)
+def Minifacture name, attrs = {}
+  Minifacture.create(name, attrs)
 end
 
 unless Object.const_defined? :Factory
-  Factory = Miniskirt
-  alias Factory Miniskirt
+  Factory = Minifacture
+  alias Factory Minifacture
 end
