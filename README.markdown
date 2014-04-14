@@ -142,6 +142,18 @@ This initializes the object, then calls the object's `name=` method, then
 processes the factory attribute `email` which calls the block.
 
 
+### Namespacing
+
+If your model is namespaced, or does not correspond directly with the symbol,
+you can explicitly declare which class to use:
+
+```ruby
+Factory.define :post, class: BlogEngine::Post do
+  # ...
+end
+```
+
+
 ## License
 
 (The MIT License)
