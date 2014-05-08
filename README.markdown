@@ -96,8 +96,8 @@ Blocks can use any Ruby code:
 
 ``` ruby
 Factory.define :user do |f|
-  f.name { %w[Alice Bob Carol].choice }
-  f.email { "#{%w[alice bob carol].choice}@example.com" }
+  f.name { %w[Alice Bob Carol].sample }
+  f.email { "#{%w[alice bob carol].sample}@example.com" }
 end
 ```
 
@@ -158,7 +158,7 @@ end
 
 (The MIT License)
 
-© 2010–2012 Stephen Celis <stephen@stephencelis.com>.
+© 2010–2014 Stephen Celis <stephen@stephencelis.com>.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
