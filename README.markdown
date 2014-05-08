@@ -8,13 +8,15 @@
 ``` ruby
 Factory.define :user do |f|
   f.name 'John Doe'                            # String.
-  f.login 'johndoe%d'                          # Sequence.
+  f.login 'john%d'                             # Sequence.
   f.email '%{login}@example.com'               # Interpolate.
   f.password f.password_confirmation('foobar') # Chain.
+  f.active { [true,false].sample }             # Block.
+  f.status { |f| f.active ? "On" : "Off" }     # Block with object parameter.
 end
 
 Factory.define :post do |f|
-  f.user { Factory :user }                     # Blocks, if you must.
+  f.user { Factory :user }                     # Association.
 end
 ```
 
