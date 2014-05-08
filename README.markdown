@@ -153,6 +153,40 @@ Factory.define :post, class: BlogEngine::Post do
 end
 ```
 
+### Parent
+
+A factory can use a parent factory:
+
+```ruby
+Factory.define :user, do |f|
+  f.name "Alice"
+end
+
+Factory.define :admin, :parent => :user do |f|
+  f.role "Administrator"
+end
+```
+
+When you use the factory, the result combines the parent factory settings:
+
+```ruby
+Factory :admin
+=> User with name="Alice" and role="Administrator"
+```
+
+The factory can overwrite the parent attributes:
+
+```ruby
+Factory.define :user, do |f|
+  f.name "Alice"
+  f.role "Guest"
+end
+
+Factory.define :admin, :parent => :user do |f|
+  f.role "Administrator"  # Replaces the parent factory role
+end
+```
+
 
 ## License
 
