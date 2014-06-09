@@ -16,6 +16,6 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = ">= 1.8.7"
   s.add_dependency "activesupport"
-  s.add_development_dependency "rake", "~> 0.9.2.2"
-  s.add_development_dependency "i18n", "~> 0.6.0"
+  s.add_development_dependency "rake"
+  s.add_development_dependency "i18n"
 end
