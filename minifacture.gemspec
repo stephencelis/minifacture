@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "minifacture"
-  s.version = "1.2.2"
+  s.version = "1.3.0"
   s.summary = "factory_girl for minitest."
   s.description = "Test::Unit begot MiniTest; factory_girl begets Minifacture."
 
