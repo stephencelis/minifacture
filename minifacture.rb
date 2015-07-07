@@ -13,7 +13,7 @@ require 'active_support/core_ext/hash'
 #   end
 class Minifacture < Struct.new(:__klass__)
   undef_method *instance_methods.grep(/^(?!__|object_id)/)
-  @@attrs = {} and private_class_method :new
+  @@attrs = {} and @@counts = Hash.new(0) and private_class_method :new
 
   class << self
     def define name, options = {}
@@ -24,11 +24,10 @@ class Minifacture < Struct.new(:__klass__)
       (h, opts, n = @@attrs[name = name.to_s]) and m = opts[:class] || name
       p = opts[:parent] and (h, m = @@attrs[p = p.to_s][0].merge(h), p)
       (m = m.is_a?(Class) ? m : m.to_s.camelize.constantize).new.tap do |r|
+        c = @@counts[p || name] += 1
         attrs.symbolize_keys!.reverse_update(h).each do |k, v|
           r.send "#{k}=", case v when String # Sequence and interpolate.
-            v.sub(/%\d*d/) {|d| d % n ||= (
-              m.respond_to?(:maximum) ? m.maximum(:id) : m.max(:id)
-            ).to_i + 1} % attrs % n
+            v.sub(/%\d*d/) { |d| d % n ||= c } % attrs % n
           when Proc then v.call(r) else v
           end
         end
